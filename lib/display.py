@@ -18,9 +18,17 @@ class Display:
         self._font_writer.printstring(s)
         self._oled.show()
     
-    def show_ina(self, chan_nr, curr, vol):
+    def show_supply(self, chan_nr, curr, vol):
         self._oled.fill(0)
         for x,y,t in zip((0,48,48),(22,8,40),(self.__CHAN_NAMES[chan_nr],f"{curr:.3f}V",f"{vol:.3f}A")):
+            self._font_writer.set_textpos(x, y)
+            self._font_writer.printstring(t)
+        self._oled.show()
+        
+    def show_voltage(self, name, value):
+        value_s = f'{value:0.3f}V' if value else 'None'
+        self._oled.fill(0)
+        for x,y,t in zip((0,0),(0,30),(name,value_s)):
             self._font_writer.set_textpos(x, y)
             self._font_writer.printstring(t)
         self._oled.show()

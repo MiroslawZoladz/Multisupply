@@ -2,7 +2,6 @@ import sys
 sys.path.append('../lib')
 
 from machine import Pin, SoftSPI
-from nonvolatile_float import nonvolatile_float
 from time import sleep
 
 
@@ -84,7 +83,7 @@ class ADC:
     def __init__(self, spi_sck_pn, spi_mosi_pn, spi_miso_pn, spi_cs): # spi_miso_pn dumy, must by any input pin
         
                 # CALLIB
-        self.volts_per_lsb = nonvolatile_float()  #3.3/32768
+#         self.volts_per_lsb = nonvolatile_float()  #3.3/32768
         
         #SPI
         sck  = Pin(spi_sck_pn, Pin.OUT)
@@ -113,9 +112,9 @@ class ADC:
         # 11 = ADC Conversion mode
         self.wr_8bit_reg(self.CONFIG0,0xE3)
             
-    def voltage(self,ch_n,ch_p): 
-        assert self.volts_per_lsb.get() != None, 'ERR adc_not_calibrated'           
-        return self.raw(ch_n,ch_p) * self.volts_per_lsb.get()           
+#     def voltage(self,ch_n,ch_p): 
+#         assert self.volts_per_lsb.get() != None, 'ERR adc_not_calibrated'           
+#         return self.raw(ch_n,ch_p) * self.volts_per_lsb.get()           
     
     def raw(self,ch_n,ch_p):
         self.cfg_MUX(ch_n,ch_p)
@@ -129,9 +128,10 @@ class ADC:
             res *= -1
         return res    
     
-    def callib(self,voltage):
-        ch0_1_lsb = self.raw(0,1)
-        self.volts_per_lsb.set(voltage/ch0_1_lsb)
+#     def callib(self,voltage):
+#         ch0_1_lsb = self.raw(0,4) # !!!
+#         self.volts_per_lsb.set(voltage/ch0_1_lsb)
+#         self.volts_per_lsb.save()
     
     def cfg_MUX(self,ch_n,ch_p):
         ctl = (ch_p<<4) | ch_n

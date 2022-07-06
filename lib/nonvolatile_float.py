@@ -7,7 +7,6 @@ class nonvolatile_float:
     def __init__(self):
         global nonvolatile_float_obj_ctr
         
-#         print(os.getcwd())
         self._filename = f"../nv/vf_{nonvolatile_float_obj_ctr}.txt"
         try:
             with open(self._filename, "r") as file:
@@ -27,4 +26,3 @@ class nonvolatile_float:
     
     def set(self, data):
         self._data = data
-        #self.save()

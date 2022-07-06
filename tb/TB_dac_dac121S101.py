@@ -11,8 +11,8 @@ dac = [DAC(bp.SPI_SCK, bp.SPI_MOSI, bp.SPI_MISO_ADC_0, cs) for cs in (bp.SPI_CS_
 dac[0].gnd()
 dac[1].gnd()
 sleep(1)
-dac[0].max()
-dac[1].max()
+dac[0].raw(1500)
+dac[1].raw(0)
 
 
 # #normal

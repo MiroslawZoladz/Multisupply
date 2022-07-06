@@ -33,10 +33,10 @@ class Board:
     def enable_channel(self):        
         self.enable[self._channel].on()
 
-    def disable_all_channels(self):        
+    def disable_all(self):        
         for e in self.enable: e.off()        
 
-    def enable_all_channels(self):        
+    def enable_all(self):        
         for e in self.enable: e.on()        
     
     def set_channel(self, chan_nr):

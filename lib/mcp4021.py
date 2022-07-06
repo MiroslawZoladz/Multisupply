@@ -1,5 +1,6 @@
 from machine import Pin
-from nonvolatile_float import nonvolatile_float
+# from nonvolatile_float import nonvolatile_float
+from nonvolatile import NonVolatile
 
 class MCP4021:
     
@@ -7,9 +8,9 @@ class MCP4021:
     
     def __init__(self, pin_cs):
         self._state = 0
-        self._nonvolatile_state = nonvolatile_float()        
-        self._ud_pin = Pin(self.__PIN_UD, Pin.OUT, Pin.PULL_UP, value = False)
-        self._cs_pin = Pin(pin_cs, Pin.OUT, Pin.PULL_UP, value = False)
+        self._nonvolatile_state = NonVolatile()        
+        self._ud_pin = Pin(self.__PIN_UD, Pin.OUT, value = False)
+        self._cs_pin = Pin(pin_cs, Pin.OUT, value = False)
         
         _ = self._nonvolatile_state.get()
         taps = _ if _ else 0

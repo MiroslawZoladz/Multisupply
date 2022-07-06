@@ -1,4 +1,5 @@
-from nonvolatile_float import nonvolatile_float
+# from nonvolatile_float import nonvolatile_float
+from nonvolatile import NonVolatile
 from config import Config
 
 class INA219:
@@ -10,7 +11,7 @@ class INA219:
     def __init__(self, i2c, addr):
         self._i2c = i2c
         self._addr = addr
-        self._callib_coef = nonvolatile_float()
+        self._callib_coef = NonVolatile()
         
     def config(self, name, val):
         self.Config_reg_buffer.set(name, val)

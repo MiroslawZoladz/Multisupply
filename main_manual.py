@@ -2,51 +2,102 @@ from machine import Pin, PWM, SoftI2C
 from board import Board
 from keyboard import keyboard
 from display import Display
-
-# pwm = PWM(Pin(10))
-# pwm.freq(10000)
-# pwm.duty_u16(pow(2,16)//10)
+from analog_outputs import AnalogOutputs
+from analog_input   import AnalogInput
+from HV import HV
+from config_jumpers import JMP
+from pwm import Pwm
 
 sda=Pin(17)
 scl=Pin(18)
 i2c=SoftI2C(sda=sda, scl=scl, freq=400000)
 
-board = Board(i2c)
 display = Display(i2c)
-# display.show(0, 123/1000, 456/1000)
+board = Board(i2c)
+ao = AnalogOutputs()
+ai = AnalogInput()
+hv = HV()
+pwm = Pwm()
 
-# supply enabling
-en = [Pin(pin_nr,Pin.OUT, value = 0) for pin_nr in (5, 6, 7, 8, 9)]
-for e in en: e.on()
-  
+board.enable_all()
+ao.enable()
+pwm.enable()
 
 keyboard = keyboard()
 channel = 0
 
+menu = 'supp_ch0','supp_ch1','supp_ch2','supp_ch3','supp_ch4','HV','call_n','call_p','v_in','pwm_f','pwm_p'
+item_ix = 0
+menu_item_change = True
 while True:
-    butt_read = keyboard.read()
-    if butt_read == 'UP' and channel < 4:
-        channel += 1
-        board.set_channel(channel)
-    elif butt_read == 'DOWN' and channel > 0:
-        channel -= 1
-        board.set_channel(channel)
-    elif butt_read == 'RIGHT':
-        board.inc()
-    elif butt_read == 'LEFT':
-        board.dec()
-    elif butt_read == 'MIDDLE':
-        board.save()
-    else:
-        pass
+    key = keyboard.read()
     
-    board.set_param('v')
-    voltage = board.measure()
+    if   key == 'DOWN':
+        item_ix -= int(item_ix > 0)
+        menu_item_change = True
+        
+    elif key == 'UP'  :
+        item_ix += int (item_ix < (len(menu)-1))
+        menu_item_change = True
+        
+    elif key == 'LEFT':
+        if 'supp' in item:
+            board.dec()
+        elif 'call' in item:
+            ao.dec()
+        elif 'HV' in item:
+            hv.disable()
+        elif 'pwm_f' in item:
+            pwm.freq_dec()
+        elif 'pwm_p' in item:
+            pwm.pwm_dec()
+            
+    elif key == 'RIGHT':
+        if   'supp' in item:
+            board.inc()
+        elif 'call' in item:
+            ao.inc()
+        elif 'HV' in item:
+            hv.enable()
+        elif 'pwm_f' in item:
+            pwm.freq_inc()
+        elif 'pwm_p' in item:
+            pwm.pwm_inc()
 
-    board.set_param('c')
-    current = board.measure()
-    if current > 10000:
-        current = 0
+    elif key == 'MIDDLE':
+        board.save()
+        ao.save()
+        hv.save()
+        pwm.save()
+
+    # on menu item change 
+    if menu_item_change:
+        item = menu[item_ix]
+        if 'supp' in item:
+            channel = int(item[7])
+            board.set_channel(channel)
+        elif 'call' in item:
+            ao.set_channel(1 if 'p' in item else 0)            
     
-    display.show(channel, voltage/1000, current/1000)
+    # display    
+    if 'supp' in item:       
+        board.set_param('v')
+        voltage = board.measure()
+        board.set_param('c')
+        current = board.measure()
+        if current > 10000:
+            current = 0        
+        display.show_supply(channel, voltage/1000, current/1000)
+    elif 'call' in item:
+        display.show_voltage(ao.get_name(), ao.get_voltage())
+    elif 'v_in' in item:
+        display.show_voltage('Vin', ai.get_voltage())
+    elif 'HV' in item:
+        s = 'ON' if hv.get_state() else 'OFF'
+        display.show_str(f'HV: {s}')
+    elif 'pwm_f' in item:        
+        display.show_str(f'strobe\nfreq: {pwm.freq.get()}k')
+    elif 'pwm_p' in item:        
+        display.show_str(f'strobe\npwm: {pwm.pwm.get()}%')  
+            
 

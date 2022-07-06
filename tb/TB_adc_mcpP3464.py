@@ -6,14 +6,13 @@ from board_pinout import BoardPinout
 
 bp = BoardPinout()
 
-MISO_PN = bp.SPI_MISO_ADC_1
-CS_PN   = bp.SPI_CS_ADC_1
+MISO_PN = bp.SPI_MISO_ADC_0
+CS_PN   = bp.SPI_CS_ADC_0
 
 adc = ADC(bp.SPI_SCK, bp.SPI_MOSI, MISO_PN, CS_PN)
-adc.callib(1.2095)
+adc.callib(1.2145)
 
 while(1):
-    _ = ' '.join([f'{adc.voltage(0,i):0.3f}'for i in range(8)])
-    print(_)
+    print(f'{adc.voltage(0,4):0.3f}')
 
 

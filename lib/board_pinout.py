@@ -9,6 +9,15 @@ class BoardPinout:
     # ADCs
     SPI_MISO_ADC_0 = 12
     SPI_CS_ADC_0 = 10
+    
+    # JMPers
+    JMP_RMT_CTL = 27
+    JMP_POW_ON = 26
 
+    # HV
+    HV_ENABLE = 4
+    
+    # PWM
+    PWM = 16
  
  
