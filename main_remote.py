@@ -1,5 +1,4 @@
-HELP ="""
-#MAIN
+HELP =""" Commands
 
 # supply
 sch: set current channel
@@ -68,53 +67,57 @@ while True:
     
     command = input("cmd?:")
     
-    tokens = command.split()
-    if not tokens:
-        print(HELP)
-        continue
-    cmd, arg  = tokens[0], [float(s) for s in tokens[1:]]
-    
-    # supply
-    if   cmd == 'sea': board.enable_all()
-    elif cmd == 'sda': board.disable_all()
-    elif cmd == 'sech' : board.enable_channel()
-    elif cmd == 'sch': board.set_channel(int(arg[0]))
-    elif cmd == 'sv' : board.set_param('v')
-    elif cmd == 'si' : board.set_param('c')
-    elif cmd == 'sp' : board.set(int(arg[0]))
-    elif cmd == 'sm' :            
-        val = board.measure()
-        if val>10000:
-            val  = 0
-        print(val)
-    elif cmd == 'sc': board.callib(int(tokens[1]))
-    elif cmd == 'sg': board.config(arg[0], int(arg[1]))
-    elif cmd == 'sf': print(board.coeff())
-    elif cmd == 'sr': print(board.raw())
-    
-    # v out    
-    elif cmd == 'od'  : ao.gnd()
-    elif cmd == 'och' : ao.set_channel(int(arg[0]))
-    elif cmd == 'ov'   : ao.set_voltage(float(arg[0]))
-    elif cmd == 'omin': ao.min()
-    elif cmd == 'omax': ao.max()
-    elif cmd == 'oc'  : ao.callib(*arg)
-    
-    # v in
-    elif cmd == 'iv' : print(f'{ai.get_voltage():0.4f}') 
-    elif cmd == 'ic': ai.callib(*arg)
-    
-    # HV
-    elif cmd == 'hve': hv.enable()
-    elif cmd == 'hvd': hv.disable()
-    
-    # PWM
-    elif cmd == 'pe': pwm.enable()
-    elif cmd == 'pd': pwm.disable()
-    elif cmd == 'pf': pwm.freq_set(int(arg[0]))
-    elif cmd == 'pp': pwm.pwm_set(int(arg[0]))
-    
-    else: print(HELP)
+    try:
+        tokens = command.split()
+        if not tokens:
+            print(HELP)
+            continue
+        cmd, arg  = tokens[0], [float(s) for s in tokens[1:]]
+        
+        # supply
+        if   cmd == 'sea': board.enable_all()
+        elif cmd == 'sda': board.disable_all()
+        elif cmd == 'sech' : board.enable_channel()
+        elif cmd == 'sch': board.set_channel(int(arg[0]))
+        elif cmd == 'sv' : board.set_param('v')
+        elif cmd == 'si' : board.set_param('c')
+        elif cmd == 'sp' : board.set(int(arg[0]))
+        elif cmd == 'sm' :            
+            val = board.measure()
+            if val>10000:
+                val  = 0
+            print(val)
+        elif cmd == 'sc': board.callib(int(tokens[1]))
+        elif cmd == 'sg': board.config(arg[0], int(arg[1]))
+        elif cmd == 'sf': print(board.coeff())
+        elif cmd == 'sr': print(board.raw())
+        
+        # v out    
+        elif cmd == 'od'  : ao.gnd()
+        elif cmd == 'och' : ao.set_channel(int(arg[0]))
+        elif cmd == 'ov'   : ao.set_voltage(float(arg[0]))
+        elif cmd == 'omin': ao.min()
+        elif cmd == 'omax': ao.max()
+        elif cmd == 'oc'  : ao.callib(*arg)
+        
+        # v in
+        elif cmd == 'iv' : print(f'{ai.get_voltage():0.4f}') 
+        elif cmd == 'ic': ai.callib(*arg)
+        
+        # HV
+        elif cmd == 'hve': hv.enable()
+        elif cmd == 'hvd': hv.disable()
+        
+        # PWM
+        elif cmd == 'pe': pwm.enable()
+        elif cmd == 'pd': pwm.disable()
+        elif cmd == 'pf': pwm.freq_set(int(arg[0]))
+        elif cmd == 'pp': pwm.pwm_set(int(arg[0]))
+        
+        else: print(HELP)
+        
+        print('ok')
 
-
+    except:
+        print('Error')
 

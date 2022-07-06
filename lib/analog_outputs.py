@@ -32,17 +32,16 @@ class AnalogOutputs:
     def inc(self):
         v = self.voltge[self.channel].get()
         max_ = self.callib_range[self.channel].max.get()
-        if (v + 0.01) < max_:
-            v += 0.01
+        if (v + 0.01) < max_: v += 0.01
         self.voltge[self.channel].set(v)
+        self._set_voltage(self.channel,v)
            
     def dec(self):
         v = self.voltge[self.channel].get()
-        min_ = self.callib_range[self.channel].min.get()        
-        
-        if (v - 0.01) > min_:
-            v -= 0.01
-        self.voltge[self.channel].set(v)           
+        min_ = self.callib_range[self.channel].min.get()                
+        if (v - 0.01) > min_: v -= 0.01
+        self.voltge[self.channel].set(v)
+        self._set_voltage(self.channel,v)
     
     def set_channel(self, channel):
         self.channel = channel
